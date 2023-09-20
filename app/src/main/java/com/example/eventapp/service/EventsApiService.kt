@@ -18,7 +18,7 @@ val retrofit = Retrofit.Builder()
     .build()
 
 interface MyApiService{
-    @GET("events?apikey=7elxdku9GGG5k8j0Xm8KWdANDgecHMV0")
+    @GET("events?countryCode=CA&size=200&city=Ottawa&apikey=7elxdku9GGG5k8j0Xm8KWdANDgecHMV0")
 //    @GET("events.json")
         suspend  fun getData():ResponseApi
 //        suspend  fun getData(@Query("apikey") apikey:String):ResponseApi

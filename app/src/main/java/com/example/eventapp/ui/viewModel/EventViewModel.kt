@@ -34,6 +34,7 @@ class EventViewModel:ViewModel() {
         viewModelScope.launch {
             try {
                 events = eventRepository.getEvents()
+                Log.d(TAG, "The number of Events: ${events.size}")
             }catch (e:Exception){
                 Log.d(TAG, "Something went wrong")
             }

@@ -72,9 +72,11 @@ fun CardTextContent(event: Event){
     Column() {
         Spacer(modifier = Modifier.height(6.dp))
         Text(event.name)
-        Text(event.name)
-        Text(event.name)
-        Text(event.name)
+        Text(event.dates.start.localDate)
+        Text(event.dates.start.localTime)
+        Text(event.classifications[0].segment.name)
+        Text(event._embedded.venues[0].name)
+        Text(event._embedded.venues[0].address.line1)
         Spacer(modifier = Modifier.height(6.dp))
     }
 
