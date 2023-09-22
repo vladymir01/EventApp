@@ -35,6 +35,19 @@ class EventViewModel:ViewModel() {
             try {
                 events = eventRepository.getEvents()
                 Log.d(TAG, "The number of Events: ${events.size}")
+
+                //region Determine the categories
+                    val categoryCounts = mutableMapOf<String, Int>() // that is a list of category
+                    events.forEach {
+                        val category = it.classifications[0].segment.name
+                        categoryCounts[category] = (categoryCounts[category] ?: 0) + 1
+                    }
+
+                    for ((category, count) in categoryCounts){
+                        Log.d(TAG, "$category: $count")
+                    }
+                //endregion
+
             }catch (e:Exception){
                 Log.d(TAG, "Something went wrong")
             }
