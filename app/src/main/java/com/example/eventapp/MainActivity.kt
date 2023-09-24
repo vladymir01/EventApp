@@ -13,8 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.eventapp.data.repository.EventRepository
+import com.example.eventapp.ui.screen.DropDownCountry
+import com.example.eventapp.ui.screen.GenderDropDownMenu
 import com.example.eventapp.ui.screen.ListEventScreen
 import com.example.eventapp.ui.theme.EventAppTheme
+import com.example.eventapp.ui.viewModel.CountryViewModel
 import com.example.eventapp.ui.viewModel.EventViewModel
 
 const val TAG = "MainActivity"
@@ -25,7 +28,7 @@ class MainActivity : ComponentActivity() {
             EventAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+//                    modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MainApp()
@@ -37,7 +40,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainApp(){
-    val eventViewModel:EventViewModel = viewModel()
-    ListEventScreen(eventViewModel.events)
+//    GenderDropDownMenu()
+//    val eventViewModel:EventViewModel = viewModel()
+//    ListEventScreen(eventViewModel.events)
+    val countryViewModel:CountryViewModel = viewModel()
+    DropDownCountry(countryViewModel.countries)
 }
 
