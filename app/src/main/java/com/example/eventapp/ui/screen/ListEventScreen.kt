@@ -12,11 +12,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,16 +31,22 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -49,16 +58,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.eventapp.TAG
+import com.example.eventapp.components.DropDownCategory
+import com.example.eventapp.components.TheSliderQty
 import com.example.eventapp.data.model.Event
 import com.example.eventapp.data.model.ResponseApi
+import com.example.eventapp.data.model.countryModel.Country
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListEventScreen(events:List<Event>){
+fun ListEventScreen(events:List<Event>, countries:List<Country>){
 
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -90,28 +102,39 @@ fun ListEventScreen(events:List<Event>){
             ModalBottomSheet(
                 onDismissRequest = { showBottomSheet = false},
                 sheetState = sheetState,
-                modifier = Modifier.height(600.dp)
+                modifier = Modifier.height(700.dp)
             ) {
-                //The sheet Content (The modal)
-                Button(onClick = {
-                scope.launch { sheetState.hide() }.invokeOnCompletion {
-                    if (!sheetState.isVisible){ showBottomSheet = false} }
-                }) {
-                    Text("Hide bottom sheet")
+
+                    Column(
+                        modifier = Modifier.padding(30.dp)
+                    ) {
+                        DropDownCountry(countries)
+                        Spacer(Modifier.height(20.dp))
+                        DropDownCategory()
+                        Spacer(Modifier.height(20.dp))
+                        TheSliderQty("Choose the quantity you want for the results")
+                        Spacer(Modifier.height(20.dp))
+                        Button(onClick = {
+                            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible){ showBottomSheet = false} }
+                        }) { Text("Submit") }
+                    }
+
                 }
 
-            }
+
         }
         //endregion
 
     }
 }
-
 @Composable
 fun FilterAndSort(onClick:()->Unit) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxWidth().padding(20.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp)
     ) {
         Text("Filter", modifier = Modifier.clickable { onClick() })
         Text("Sort")

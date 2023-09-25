@@ -3,6 +3,7 @@ package com.example.eventapp.ui.screen
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,12 +49,13 @@ fun DropDownCountry(countries:List<Country>){
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)},
                 placeholder = { Text("Please select the country") },
                 colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                modifier = Modifier.menuAnchor()
+                modifier = Modifier.menuAnchor().fillMaxWidth()
             )
 
             ExposedDropdownMenu(
                 expanded = isExpanded,
-                onDismissRequest = { isExpanded = false }
+                onDismissRequest = { isExpanded = false },
+                modifier = Modifier.height(300.dp)
             ) {
                 countries.forEach{
                     DropdownMenuItem(
@@ -66,8 +68,6 @@ fun DropDownCountry(countries:List<Country>){
                         }
                     )
                 }
-
-
 
             }
         }
@@ -93,25 +93,23 @@ fun DropDownCountry(countries:List<Country>){
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = cityIsExpanded)},
                 placeholder = { Text("Please select the city") },
                 colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                modifier = Modifier.menuAnchor()
+                modifier = Modifier.menuAnchor().fillMaxWidth()
             )
 
             ExposedDropdownMenu(
                 expanded = cityIsExpanded,
-                onDismissRequest = { cityIsExpanded = false }
+                onDismissRequest = { cityIsExpanded = false },
+                modifier = Modifier.height(if(cityList.isNotEmpty()) 300.dp else 0.dp)
             ) {
-                cityList.forEach{
-                    DropdownMenuItem(
-                        text = { Text(it) },
-                        onClick = {
-                            city = it
-                            cityIsExpanded = false
-                        }
-                    )
+                    cityList.forEach{
+                        DropdownMenuItem(
+                            text = { Text(it) },
+                            onClick = {
+                                city = it
+                                cityIsExpanded = false
+                            }
+                        )
                 }
-
-
-
             }
         }
 

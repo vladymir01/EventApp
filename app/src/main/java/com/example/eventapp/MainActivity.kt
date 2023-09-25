@@ -40,10 +40,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainApp(){
-//    GenderDropDownMenu()
-//    val eventViewModel:EventViewModel = viewModel()
-//    ListEventScreen(eventViewModel.events)
+    val eventViewModel:EventViewModel = viewModel()
     val countryViewModel:CountryViewModel = viewModel()
-    DropDownCountry(countryViewModel.countries)
+    ListEventScreen(eventViewModel.events, countryViewModel.countries)
+//    DropDownCountry(countryViewModel.countries)
 }
 
