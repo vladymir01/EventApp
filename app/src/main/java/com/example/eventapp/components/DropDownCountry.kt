@@ -20,10 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.eventapp.TAG
 import com.example.eventapp.data.model.countryModel.Country
+import com.example.eventapp.ui.viewModel.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownCountry(countries:List<Country>){
+fun DropDownCountry(countries:List<Country>, pickCity:(pickedCity:String)->Unit){
 
     var isExpanded by remember { mutableStateOf(false) }
     var country by remember { mutableStateOf("") }
@@ -106,6 +107,7 @@ fun DropDownCountry(countries:List<Country>){
                             text = { Text(it) },
                             onClick = {
                                 city = it
+                                pickCity(it)
                                 cityIsExpanded = false
                             }
                         )

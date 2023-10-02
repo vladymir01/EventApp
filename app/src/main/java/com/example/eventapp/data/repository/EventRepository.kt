@@ -1,15 +1,21 @@
 package com.example.eventapp.data.repository
 
-import android.util.Log
-//import androidx.compose.ui.tooling.data.EmptyGroup.data
-import com.example.eventapp.TAG
+/*
+* -----------------------------
+* Code created and Edited by:
+* Vladymir Adam
+* October 2, 2023
+* ------------------------------
+* */
+
 import com.example.eventapp.data.model.Event
-import com.example.eventapp.data.model.ResponseApi
 import com.example.eventapp.service.EventsApi
 
 class EventRepository() {
-    suspend fun getEvents(): List<Event> {
-        return EventsApi.retrofitService.getData()._embedded.events
-//        return EventsApi.retrofitService.getData("7elxdku9GGG5k8j0Xm8KWdANDgecHMV0")._embedded.events
+    suspend fun getEvents(city:String="",size:Int = 200, classificationName:String = ""): List<Event> {
+        return EventsApi
+            .retrofitService
+            .getData( city=city,size = size, classificationName = classificationName)
+            ._embedded.events
     }
 }

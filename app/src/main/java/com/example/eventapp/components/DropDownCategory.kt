@@ -1,5 +1,13 @@
 package com.example.eventapp.components
 
+/*
+* -----------------------------
+* Code created and Edited by:
+* Vladymir Adam
+* October 2, 2023
+* ------------------------------
+* */
+
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.DropdownMenuItem
@@ -23,7 +31,7 @@ fun DropDownCategory(){
     //region The variables
     var isExpanded:Boolean by remember { mutableStateOf(false) }
     var category by remember { mutableStateOf("") }
-    val listCategory:List<String> = listOf("Sports", "Music", "Art", "Miscellaneous")
+    val listCategory:List<String> = listOf("Sports", "Music", "Art & Theatre", "Miscellaneous")
     //endregion
 
     //region DropDownBox that contains the ExposedDropDownMenu for the Categories

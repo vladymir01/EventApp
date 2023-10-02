@@ -1,51 +1,38 @@
 package com.example.eventapp.ui.screen
 
+/*
+* -----------------------------
+* Code created and Edited by:
+* Vladymir Adam
+* October 2, 2023
+* ------------------------------
+* */
+
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,23 +48,31 @@ import com.example.eventapp.TAG
 import com.example.eventapp.components.DropDownCategory
 import com.example.eventapp.components.TheSliderQty
 import com.example.eventapp.data.model.Event
-import com.example.eventapp.data.model.ResponseApi
-import com.example.eventapp.data.model.countryModel.Country
+import com.example.eventapp.ui.viewModel.EventViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListEventScreen(events:List<Event>, countries:List<Country>){
+fun ListEventScreen(events:List<Event>, eventViewModel: EventViewModel){
 
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val scope = rememberCoroutineScope()
-    var showBottomSheet by remember { mutableStateOf(false) }
+    //region Variables
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        val scope = rememberCoroutineScope()
+        var showBottomSheet by remember { mutableStateOf(false) }
+        val size by eventViewModel.size.observeAsState()
+        var sliderPosition by remember { mutableFloatStateOf(0f) }
+    //endregion
 
+    //region SideEffects
+    LaunchedEffect(size){
+        size?.let { eventViewModel.getTheEvents(it) }
+    }
+    //endregion
+
+    //region The Composable
     Scaffold(
         topBar = { FilterAndSort(onClick = {showBottomSheet = true}) }
-
-
     ) {
         //region Page Content
         Column(
@@ -108,25 +103,27 @@ fun ListEventScreen(events:List<Event>, countries:List<Country>){
                     Column(
                         modifier = Modifier.padding(30.dp)
                     ) {
-                        DropDownCountry(countries)
+                        TheSliderQty(
+                            "Choose the quantity you want for the results",
+                            sliderPosition,
+                            onSliderChange = {theValue -> sliderPosition = theValue}
+                        )
                         Spacer(Modifier.height(20.dp))
                         DropDownCategory()
-                        Spacer(Modifier.height(20.dp))
-                        TheSliderQty("Choose the quantity you want for the results")
-                        Spacer(Modifier.height(20.dp))
                         Button(onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                Log.d(TAG,"The selected quantity is: ${sliderPosition.toInt()}")
+                                eventViewModel.setSize(sliderPosition.toInt())
                                 if (!sheetState.isVisible){ showBottomSheet = false} }
                         }) { Text("Submit") }
                     }
 
                 }
-
-
         }
         //endregion
-
     }
+
+    //endregion
 }
 @Composable
 fun FilterAndSort(onClick:()->Unit) {
@@ -177,6 +174,7 @@ fun CardTextContent(event: Event){
         Text(event.classifications[0].segment.name)
         Text(event._embedded.venues[0].name)
         Text(event._embedded.venues[0].address.line1)
+        Text(event._embedded.venues[0].city.name)
         Spacer(modifier = Modifier.height(6.dp))
     }
 
