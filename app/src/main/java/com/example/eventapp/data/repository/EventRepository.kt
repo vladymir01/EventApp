@@ -12,7 +12,7 @@ import com.example.eventapp.data.model.Event
 import com.example.eventapp.service.EventsApi
 
 class EventRepository() {
-    suspend fun getEvents(city:String="",size:Int = 200, classificationName:String = ""): List<Event> {
+    suspend fun getEvents(city:String="",size:Int = 200, classificationName:String =""): List<Event> {
         return EventsApi
             .retrofitService
             .getData( city=city,size = size, classificationName = classificationName)

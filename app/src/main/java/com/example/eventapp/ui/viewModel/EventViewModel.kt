@@ -41,21 +41,30 @@ class EventViewModel:ViewModel() {
         var events:List<Event> by mutableStateOf(listOf())
         private val _size:MutableLiveData<Int> = MutableLiveData()
         val size:MutableLiveData<Int> = _size
+
+        private val _category:MutableLiveData<String> = MutableLiveData()
+        val category:MutableLiveData<String> = _category
     //endregion
 
     init {
         getTheEvents()
     }
 
-    //region The functions
+    //region The Setters
         fun setSize(theSize:Int){
             _size.value = theSize
         }
 
-        fun getTheEvents(size:Int = 20){
+        fun setCategory(theCategory:String){
+            _category.value = theCategory
+        }
+    //endregion
+
+    //region The functions
+        fun getTheEvents(size:Int = 20, category:String = ""){
             viewModelScope.launch {
                 try {
-                    events = eventRepository.getEvents(size=size)
+                    events = eventRepository.getEvents(size=size, classificationName = category)
 
                     //region Determine the categories
                         val categoryCounts = mutableMapOf<String, Int>() // that is a list of category

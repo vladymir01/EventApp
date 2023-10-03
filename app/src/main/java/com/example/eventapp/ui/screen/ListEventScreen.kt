@@ -61,12 +61,19 @@ fun ListEventScreen(events:List<Event>, eventViewModel: EventViewModel){
         val scope = rememberCoroutineScope()
         var showBottomSheet by remember { mutableStateOf(false) }
         val size by eventViewModel.size.observeAsState()
+        val category by eventViewModel.category.observeAsState()
         var sliderPosition by remember { mutableFloatStateOf(0f) }
+        var classification by remember { mutableStateOf("") }
     //endregion
 
     //region SideEffects
-    LaunchedEffect(size){
-        size?.let { eventViewModel.getTheEvents(it) }
+    LaunchedEffect(size,category){
+        size?.let { category?.let { it1 ->
+                                    if (it1 != "All") eventViewModel.getTheEvents(it, it1)
+                                    //if the user choose "All", we will not pass the classificationName
+                                    else eventViewModel.getTheEvents(it)
+                                }
+                }
     }
     //endregion
 
@@ -109,11 +116,14 @@ fun ListEventScreen(events:List<Event>, eventViewModel: EventViewModel){
                             onSliderChange = {theValue -> sliderPosition = theValue}
                         )
                         Spacer(Modifier.height(20.dp))
-                        DropDownCategory()
+                        DropDownCategory(classification, onValueChange = {theValue -> classification = theValue})
                         Button(onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
                                 Log.d(TAG,"The selected quantity is: ${sliderPosition.toInt()}")
                                 eventViewModel.setSize(sliderPosition.toInt())
+                                eventViewModel.setCategory(classification)
+                                Log.d(TAG, "The slider: $sliderPosition")
+                                Log.d(TAG, "The Category: $classification")
                                 if (!sheetState.isVisible){ showBottomSheet = false} }
                         }) { Text("Submit") }
                     }

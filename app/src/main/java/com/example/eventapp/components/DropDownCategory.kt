@@ -26,12 +26,11 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownCategory(){
+fun DropDownCategory(classification:String,onValueChange:(value:String)->Unit){
 
     //region The variables
     var isExpanded:Boolean by remember { mutableStateOf(false) }
-    var category by remember { mutableStateOf("") }
-    val listCategory:List<String> = listOf("Sports", "Music", "Art & Theatre", "Miscellaneous")
+    val listCategory:List<String> = listOf("Sports", "Music", "Art & Theatre", "Miscellaneous", "All")
     //endregion
 
     //region DropDownBox that contains the ExposedDropDownMenu for the Categories
@@ -43,10 +42,8 @@ fun DropDownCategory(){
     ) {
         //region The TextField
         TextField(
-            value = category,
-            onValueChange = { newValue ->
-                category = newValue
-            },
+            value = classification,
+            onValueChange = {onValueChange(it)},
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)},
             placeholder = { Text("Please select a category") },
@@ -61,14 +58,14 @@ fun DropDownCategory(){
         ExposedDropdownMenu(
             expanded = isExpanded,
             onDismissRequest = { isExpanded = false },
-            modifier = Modifier.height(200.dp)
+            modifier = Modifier.height(250.dp)
         ) {
             listCategory.forEach{
                 DropdownMenuItem(
                     text = { Text(it) },
                     onClick = {
                         isExpanded = false
-                        category = it
+                        onValueChange(it)
                     }
                 )
             }
